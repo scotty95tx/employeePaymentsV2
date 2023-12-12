@@ -29,31 +29,28 @@ class CalculateLaborerPay extends PaymentCalculator {
             this.totalPay += this.hoursWorked * 1 + 20
         }
         
-        return {SUCCESS: true, ERROR: 'none', hours: this.hoursWorked, name: this.name, type: this.type, pay: this.totalPay}
+        return {hours: this.hoursWorked, name: this.name, type: this.type, pay: this.totalPay}
     }
 }
 
 class CalculateForemanPay extends PaymentCalculator {
     calculateEmployeePayment(id, employeeData, payrollExport) {
         super.calculateEmployeePayment(id, employeeData, payrollExport)
-        console.log(this.totalPay)
-
         if (this.hoursWorked > 15) {
             this.totalPay += this.hourlyRate * .05 * this.hoursWorked
         }
 
-        return {SUCCESS: true, ERROR: 'none', hours: this.hoursWorked, name: this.name, type: this.type, pay: this.totalPay}
+        return {hours: this.hoursWorked, name: this.name, type: this.type, pay: this.totalPay}
     }
 }
 
 class CalculateSuperPay extends PaymentCalculator {
     calculateEmployeePayment(id, employeeData, payrollExport) {
         super.calculateEmployeePayment(id, employeeData, payrollExport)
-
         if (this.hoursWorked > 20) {
             this.totalPay += 50
         }
-        return {SUCCESS: true, ERROR: 'none', hours: this.hoursWorked, name: this.name, type: this.type, pay: this.totalPay}
+        return {hours: this.hoursWorked, name: this.name, type: this.type, pay: this.totalPay}
     }
 }
 
@@ -86,7 +83,7 @@ const employeeData = {
         race: "Irish",
         dateOfBirth: "June 6th, 1890",
         hourlyRate: 80,
-        type: "Superintindent"
+        type: "SuperIntendent"
     },
     8759 : {
         id: 8759,
@@ -102,7 +99,20 @@ const employeeData = {
 
 const payrollExport = [{id: 8759, hours: 50}, {id: 4020, hours: 55}, {id: 1079, hours: 45}, {id: 123, hours: 52}]
 
-console.log(new CalculateForemanPay().calculateEmployeePayment(1079, employeeData, payrollExport))
-console.log(new CalculateLaborerPay().calculateEmployeePayment(4020, employeeData, payrollExport))
-console.log(new CalculateLaborerPay().calculateEmployeePayment(123, employeeData, payrollExport))
-console.log(new CalculateSuperPay().calculateEmployeePayment(8759, employeeData, payrollExport))
+function calculateAllPay(employeeData, payrollExport) {
+    let allPay = [{SUCCESS: true, ERROR: 'none'}]
+    for (let i = 0; i < payrollExport.length; i++) {
+        if (employeeData[payrollExport[i].id].type == "Laborer") {
+            allPay.push(new CalculateLaborerPay().calculateEmployeePayment(payrollExport[i].id, employeeData, payrollExport))
+        } else if (employeeData[payrollExport[i].id].type == "Foreman") {
+            allPay.push(new CalculateForemanPay().calculateEmployeePayment(payrollExport[i].id, employeeData, payrollExport))
+        } else if (employeeData[payrollExport[i].id].type == "SuperIntendent") {
+            allPay.push(new CalculateSuperPay().calculateEmployeePayment(payrollExport[i].id, employeeData, payrollExport))
+        } else {
+            return [{SUCCESS: false, ERROR: `Employeee ${payrollExport[i].id} does not have a valid type`}]
+        }
+    }
+    return allPay
+}
+
+console.log(calculateAllPay(employeeData, payrollExport))
