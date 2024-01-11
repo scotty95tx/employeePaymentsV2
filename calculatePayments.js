@@ -31,8 +31,9 @@ class Employee {
     }
   
     getSalary(payrollExport) {
-      let hoursWorked = super.getSalary(payrollExport).hours;
-      let totalPay = super.getSalary(payrollExport).pay;
+      let salaryData = super.getSalary(payrollExport)
+      let hoursWorked = salaryData.hours
+      let totalPay = salaryData.pay
   
       if (hoursWorked > 10) {
         totalPay += hoursWorked * 1 + 20;
@@ -52,8 +53,9 @@ class Employee {
       super(id, name, hourlyRate);
     }
     getSalary(payrollExport) {
-      let hoursWorked = super.getSalary(payrollExport).hours;
-      let totalPay = super.getSalary(payrollExport).pay;
+      let salaryData = super.getSalary(payrollExport)
+      let hoursWorked = salaryData.hours
+      let totalPay = salaryData.pay
   
       if (hoursWorked > 15) {
         totalPay += this.hourlyRate * 0.05 * hoursWorked;
@@ -73,8 +75,9 @@ class Employee {
       super(id, name, hourlyRate);
     }
     getSalary(payrollExport) {
-      let hoursWorked = super.getSalary(payrollExport).hours;
-      let totalPay = super.getSalary(payrollExport).pay;
+      let salaryData = super.getSalary(payrollExport)
+      let hoursWorked = salaryData.hours
+      let totalPay = salaryData.pay
   
       if (hoursWorked > 20) {
         totalPay += 50;
